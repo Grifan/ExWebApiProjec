@@ -1,0 +1,6 @@
+namespace ExWebApiProjec.Areas.HelpPage.ModelDescriptions
+{
+    public class SimpleTypeModelDescription : ModelDescription
+    {
+    }
+}
