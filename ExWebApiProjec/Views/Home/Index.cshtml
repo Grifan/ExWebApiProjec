@@ -1,24 +1,197 @@
-﻿<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS, and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+﻿<div id="tableBlock"></div>
+<div id="editBlock">
+    <h3>Редактирование заданий</h3>
+    <table>
+        <tr><td><input type="hidden" id="editId" /></td><td></td></tr>
+        <tr><td><label>Название: </label></td><td><input type="text" id="editName" /></td></tr>
+        <tr><td><label>Описание: </label></td><td><input type="text" id="editDescript" /></td></tr>
+        <tr><td><label>Дата создания: </label></td><td><input type="text" id="editCreationDate" /></td></tr>
+        <tr><td><label>Дата начала: </label></td><td><input type="text" id="editStartDate" /></td></tr>
+        <tr><td><label>Дата окончания: </label></td><td><input type="text" id="editFinishDate" /></td></tr>
+    </table>
+    <button id="editTask">Сохранить</button>
 </div>
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>ASP.NET Web API is a framework that makes it easy to build HTTP services that reach
-        a broad range of clients, including browsers and mobile devices. ASP.NET Web API
-        is an ideal platform for building RESTful applications on the .NET Framework.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301870">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301871">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301872">Learn more &raquo;</a></p>
-    </div>
+<div id="createBlock">
+    <h3>Добавление задания</h3>
+    <table>
+        <tr><td><label>Название: </label></td><td><input type="text" id="addName" /></td></tr>
+        <tr><td><label>Описание: </label></td><td><input type="text" id="addDescript" /></td></tr>
+        <tr><td><label>Дата создания: </label></td><td><input type="text" id="addCreationDate" /></td></tr>
+        <tr><td><label>Дата начала: </label></td><td><input type="text" id="addStartDate" /></td></tr>
+        <tr><td><label>Дата окончания: </label></td><td><input type="text" id="addFinishDate" /></td></tr>
+    </table>
+    <button id="addTask">Сохранить</button>
 </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            GetAllTasks();
+            Time();
+
+            $("#editTask").click(function (event) {
+                event.preventDefault();
+                EditTask();
+            });
+
+            $("#addTask").click(function (event) {
+                event.preventDefault();
+                AddTask();
+            });
+
+        });
+
+        function Time() {
+            var dt = new Date();
+            var year = dt.getFullYear();
+            var month = dt.getMonth();
+            if (month < 10) month = '0' + month;
+            var day = dt.getDay();
+
+            if (day < 10) day = '0' + day;        
+
+            $("#addCreationDate").val(day + '-' + month + '-' + year).strResult;//(year + month + day);
+
+        }
+        // Получение всех заданий по ajax-запросу
+        function GetAllTasks() {
+
+            $("#createBlock").css('display', 'block');
+            $("#editBlock").css('display', 'none');
+            $.ajax({
+                url: '/api/values',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    WriteResponse(data);
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        }
+        // Добавление новой задачи
+        function AddTask() {
+            // получаем значения для добавляемой задачи
+            var task = {
+                Name: $('#addName').val(),
+                Description: $('#addDescript').val(),
+                CreationDate: $('#addCreationDate').val(),
+                Start: $('#addStartDate').val(),
+                Finish: $('#addFinishDate').val()
+            };
+
+            $.ajax({
+                url: '/api/values',
+                type: 'POST',
+                data: JSON.stringify(task),
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    GetAllTasks();
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        }
+        // Удаление задачи
+        function DeleteTask(id) {
+
+            $.ajax({
+                url: '/api/values/' + id,
+                type: 'DELETE',
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    GetAllTasks();
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        }
+        // редактирование задачи
+        function EditTask() {
+            var id = $('#editId').val()
+            // получаем новые значения для редактируемой задачи
+            var task = {
+                Id: $('#editId').val(),
+                Name: $('#editName').val(),
+                Description: $('#editDescript').val(),
+                CreationDate: $('#editCreationDate').val(),
+                Start: $('#editStartDate').val(),
+                Finish: $('#editFinishDate').val()
+            };
+            $.ajax({
+                url: '/api/values/' + id,
+                type: 'PUT',
+                data: JSON.stringify(task),
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    GetAllTasks();
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        }
+        // вывод полученных данных на экран
+        function WriteResponse(tasks) {
+            var strResult = "<table><th>ID</th><th>Название</th><th>Опbисание</th><th>Дата создания</th>";
+            $.each(tasks, function (index, task) {
+                strResult += "<tr><td>" + task.Id + "</td><td> " + task.Name + "</td><td>" +
+                    task.Description + "</td><td>" + task.CreationDate +
+                    "</td><td><a id='editItem' data-item='" + task.Id + "' onclick='EditItem(this);' >Редактировать</a></td>" +
+                    "<td><a id='delItem' data-item='" + task.Id + "' onclick='DeleteItem(this);' >Удалить</a></td></tr>";
+            });
+            strResult += "</table>";
+            $("#tableBlock").html(strResult);
+
+        }
+        // обработчик удаления
+        function DeleteItem(el) {
+
+            // получаем id удаляемого объекта
+            var id = $(el).attr('data-item');
+            DeleteTask(id);
+        }
+        // обработчик редактирования
+        function EditItem(el) {
+
+            // получаем id редактируемого объекта
+            var id = $(el).attr('data-item');
+            GetTask(id);
+        }
+        // вывод данных редактируемой задачи в поля для редактирования
+        function ShowTask(task) {
+            if (task != null) {
+                $("#createBlock").css('display', 'none');
+                $("#editBlock").css('display', 'block');
+                $("#editId").val(task.Id);
+                $("#editName").val(task.Name);
+                $("#editDescript").val(task.Description);
+                $("#editCreationDate").val(task.CreationDate);
+                $("#editStartDate").val(task.Start);
+                $("#editFinishDate").val(task.Finish);
+            }
+            else {
+                alert("Такой задачи не существует");
+            }
+        }
+        // запрос задачи на редактирование
+        function GetTask(id) {
+
+            $.ajax({
+                url: '/api/values/' + id,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    ShowTask(data);
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        }
+</script>
+
+

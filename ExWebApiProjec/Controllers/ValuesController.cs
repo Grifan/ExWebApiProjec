@@ -1,39 +1,59 @@
 ﻿using System;
+using System.Data;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using ExWebApiProjec.Models;
+using System.Data.Entity;
 
 namespace ExWebApiProjec.Controllers
 {
     public class ValuesController : ApiController
     {
+        TaskContext db = new TaskContext();
         // GET api/values
-        public IEnumerable<string> Get()
+        public IEnumerable<Task> GetTasks()
         {
-            return new string[] { "value1", "value2" };
+            return db.Tasks;
         }
 
         // GET api/values/5
-        public string Get(int id)
+        public Task GetTask(int id)
         {
-            return "value";
+            Task task = db.Tasks.Find(id);
+            return task;
         }
 
         // POST api/values
-        public void Post([FromBody]string value)
+        [HttpPost]
+        public void CreateTask([FromBody]Task task)
         {
+            db.Tasks.Add(task);                    
+            db.SaveChanges();
         }
 
         // PUT api/values/5
-        public void Put(int id, [FromBody]string value)
+        [HttpPut]
+        public void EditTask(int id, [FromBody]Task task)
         {
+            if (id == task.Id)
+            {
+                db.Entry(task).State = EntityState.Modified;
+                db.SaveChanges();
+            }
         }
 
         // DELETE api/values/5
-        public void Delete(int id)
+        public void DeleteTask(int id)
         {
+            Task task = db.Tasks.Find(id);
+            if (task != null)
+            {
+                db.Tasks.Remove(task);
+                db.SaveChanges();
+            }
         }
     }
 }
