@@ -23,6 +23,7 @@ namespace ExWebApiProjec.Controllers
         public Task GetTask(int id)
         {
             Task task = db.Tasks.Find(id);
+            ModelState.AddModelError("task", "not found in bd"); // хз зачем
             return task;
         }
 
@@ -30,8 +31,22 @@ namespace ExWebApiProjec.Controllers
         [HttpPost]
         public void CreateTask([FromBody]Task task)
         {
-            db.Tasks.Add(task);                    
-            db.SaveChanges();
+            bool Valid = true;
+            if (task == null)
+            {
+                ModelState.AddModelError("task", "nuul object!");
+                Valid = false;
+            }
+            if (string.IsNullOrEmpty(task.Description))
+            {
+                ModelState.AddModelError("task.Description", "Описание не должно быть пустым");
+                Valid = false;
+            }
+            if (Valid)
+            {
+                db.Tasks.Add(task);
+                db.SaveChanges();
+            }
         }
 
         // PUT api/values/5

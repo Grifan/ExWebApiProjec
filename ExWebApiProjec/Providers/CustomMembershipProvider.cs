@@ -48,8 +48,9 @@ namespace ExWebApiProjec.Providers
                     {
                         User user = new User();
                         user.Email = email;
-                        //var cr = Crypto.HashPassword(password);
-                        user.Password = password;
+                        string pass;
+                        pass= Crypto.HashPassword(password.Trim());
+                        user.Password = pass;
                         user.CreationDate = DateTime.Now;
 
                         if (_db.Roles.Find(2) != null)

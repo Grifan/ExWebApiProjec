@@ -9,7 +9,7 @@
     @Html.ValidationSummary(true)
 
     <fieldset>
-        <legend>Введите логин и пароль</legend>
+        <legend>Введите логин и пароль или пройдите процедуру @Html.ActionLink("регистрации", "Register", "Account")</legend>
 
         <div class="editor-label">
             @Html.LabelFor(model => model.UserName)

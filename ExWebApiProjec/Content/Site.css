@@ -30,3 +30,25 @@ textarea {
 #createBlock {
     float:right;
 }
+/*___________  Лейблы для валидации ___________________*/
+.field-validation-error {
+    color: #f00;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+.input-validation-error {
+    border: 1px solid #f00;    
+}
+
+.validation-summary-errors {
+    font-weight: bold;
+    color: #f00;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+/*___________  Лейблы для валидации ___________________*/
