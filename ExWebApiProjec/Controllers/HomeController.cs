@@ -15,10 +15,5 @@ namespace ExWebApiProjec.Controllers
 
             return View();
         }
-        [Authorize]
-        public string ViewRole()
-        {
-            return "Ваша роль: Администратор";
-        }
     }
 }

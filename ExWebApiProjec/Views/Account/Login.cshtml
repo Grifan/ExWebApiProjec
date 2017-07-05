@@ -1,4 +1,4 @@
-﻿@model ExWebApiProjec.Models.LogOnModel
+﻿@model ExWebApiProjec.Models.RegisterBindingModel
 @{
     ViewBag.Title = "Вход в систему";
 }
@@ -12,11 +12,11 @@
         <legend>Введите логин и пароль или пройдите процедуру @Html.ActionLink("регистрации", "Register", "Account")</legend>
 
         <div class="editor-label">
-            @Html.LabelFor(model => model.UserName)
+            @Html.LabelFor(model => model.Email)
         </div>
         <div class="editor-field">
-            @Html.EditorFor(model => model.UserName)
-            @Html.ValidationMessageFor(model => model.UserName)
+            @Html.EditorFor(model => model.Email)
+            @Html.ValidationMessageFor(model => model.Email)
         </div>
 
         <div class="editor-label">
@@ -27,13 +27,13 @@
             @Html.ValidationMessageFor(model => model.Password)
         </div>
 
-        <div class="editor-label">
+        @*<div class="editor-label">
             @Html.LabelFor(model => model.RememberMe)
         </div>
         <div class="editor-field">
             @Html.EditorFor(model => model.RememberMe)
             @Html.ValidationMessageFor(model => model.RememberMe)
-        </div>
+        </div>*@
 
         <p>
             <input type="submit" value="Войти" />

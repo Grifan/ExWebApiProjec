@@ -22,13 +22,42 @@
     </table>
     <button id="addTask">Сохранить</button>
 </div>
-<div id="errors" style="color:red;"></div>
+<div>
+    <label>Введите email</label><br />
+    <input type="email" id="email" /> <br /><br />
+    <label>Введите пароль</label><br />
+    <input type="password" id="password" /><br /><br />
+    <label>Подтвердите пароль</label><br />
+    <input type="password" id="confirmpassword" /><br /><br />
+    <input type="submit" id="reg_btn" value="Регистрация" />
+</div>
 @Scripts.Render("~/bundles/jquery")
     <script type="text/javascript">
         $(document).ready(function () {
 
             GetAllTasks();
             Time();
+
+            $('#reg_btn').click(function (e) {
+                e.preventDefault();
+                //alert("Регистрация yfxfkj");
+                var data = {
+                    Email: $('#email').val(),
+                    Password: $('#password').val(),
+                    ConfirmPassword: $('#confirmpassword').val()
+                };
+                $.ajax({
+                    type: 'POST',
+                    url: '/api/Account/Register',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(data)
+                }).success(function (data) {
+                    alert("Регистрация пройдена");
+                }).error(function (data) {
+                    alert("В процесе регистрации возникла ошибка!");
+                    });
+                //TryRegistrate();
+            });
 
             $("#editTask").click(function (event) {
                 event.preventDefault();
@@ -40,6 +69,11 @@
                 AddTask();
             });
 
+            //$('#registrate').click(function (e) {
+            //    e.preventDefault();
+            //    TryRegistrate();
+            //});
+
         });
 
         function Time() {
@@ -49,7 +83,7 @@
             if (month < 10) month = '0' + month;
             var day = dt.getDay();
 
-            if (day < 10) day = '0' + day;        
+            if (day < 10) day = '0' + day;
 
             $("#addCreationDate").val(day + '-' + month + '-' + year).strResult;//(year + month + day);
 
@@ -193,6 +227,27 @@
                 }
             });
         }
+
+        function TryRegistrate () {
+                
+                    var data = {
+                        Email: $('#email').val(),
+                        Password: $('#password').val(),
+                        ConfirmPassword: $('#confirmpassword').val()
+                    };
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '/api/Account/Register2/',
+                        contentType: 'application/json; charset=utf-8',
+                        data: JSON.stringify(data)
+                    }).success(function (data) {
+                        alert("Регистрация пройдена");
+                    }).fail(function (data) {
+                        alert("В процесе регистрации возникла ошибка");
+                    });
+                }           
+
 </script>
 
 
