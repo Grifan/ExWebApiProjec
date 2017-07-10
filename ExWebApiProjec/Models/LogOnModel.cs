@@ -17,7 +17,7 @@ namespace ExWebApiProjec.Models
         [Display(Name = "Пароль")]
         public string Password { get; set; }
 
-        [Display(Name = "Запомнить")]
+        [Display(Name = "Запомнить")]//
         public bool RememberMe { get; set; }
     }
 
